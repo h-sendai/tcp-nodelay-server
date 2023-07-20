@@ -64,7 +64,7 @@ tcpdumpして、適当なクライアントで接続して、
 残り9回のwrite()が終了している。
 
 ## サーバーを-D付きで起動してNagleアルゴリズムを無効にした場合
--Dつきで起動したサーバー側でtcpdumpしたときの[ログ](no-nodelay.txt)
+-Dつきで起動したサーバー側でtcpdumpしたときの[ログ](nodelay.txt)
 
 ```
  1  0.000000 0.000000 IP 192.168.10.201.60920 > 192.168.10.200.1234: Flags [S], seq 1682893850, win 29200, options [mss 1460,nop,nop,sackOK], length 0
