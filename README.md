@@ -22,6 +22,8 @@ https://man7.org/linux/man-pages/man7/tcp.7.html
 「できるだけすぐにセグメントが送られる」と書いてある。
 write()するたびにwrite()したバイト数だけ送られるという意味ではない。
 
+## serverプログラムの起動方法と動作
+
 ```
 Usage: server [-p port] [-D] 
 -p port: port number (1234)
