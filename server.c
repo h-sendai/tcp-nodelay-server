@@ -20,18 +20,7 @@ void sig_usr1()
     return;
 }
 
-int set_so_cork(int sockfd, int value)
-{
-    int on_off = value;
-    if (setsockopt(sockfd, IPPROTO_TCP, TCP_CORK , &on_off, sizeof(on_off)) < 0) {
-        warn("setsockopt cork");
-        return -1;
-    }
-
-    return 0;
-}
-
-int child_proc(int connfd, int use_nodelay, int use_cork)
+int child_proc(int connfd, int use_nodelay)
 {
     fprintfwt(stderr, "use_nodelay: %d\n", use_nodelay);
 
@@ -72,9 +61,8 @@ void sig_chld(int signo)
 
 int usage(void)
 {
-    char *msg = "Usage: server [-p port] [-k] [-D] \n"
+    char *msg = "Usage: server [-p port] [-D] \n"
 "-p port: port number (1234)\n"
-"-k:      use TCP_CORK\n"
 "-D:      use TCP_NODELAY\n";
 
     fprintf(stderr, "%s", msg);
@@ -90,10 +78,9 @@ int main(int argc, char *argv[])
     socklen_t addr_len = sizeof(struct sockaddr_in);
     int listenfd;
     int use_nodelay = 0;
-    int use_cork    = 0;
 
     int c;
-    while ( (c = getopt(argc, argv, "dDhkp:")) != -1) {
+    while ( (c = getopt(argc, argv, "dDhp:")) != -1) {
         switch (c) {
             case 'd':
                 debug += 1;
@@ -104,9 +91,6 @@ int main(int argc, char *argv[])
             case 'h':
                 usage();
                 exit(0);
-            case 'k':
-                use_cork = 1;
-                break;
             case 'p':
                 port = strtol(optarg, NULL, 0);
                 break;
@@ -136,7 +120,7 @@ int main(int argc, char *argv[])
             if (close(listenfd) < 0) {
                 err(1, "close listenfd");
             }
-            if (child_proc(connfd, use_nodelay, use_cork) < 0) {
+            if (child_proc(connfd, use_nodelay) < 0) {
                 errx(1, "child_proc");
             }
             fprintfwt(stderr, "main: child_proc() returned\n");
